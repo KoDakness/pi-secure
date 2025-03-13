@@ -1,12 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from cryptography.fernet import Fernet
 import os
+from utils import generate_password
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a long, random secret key!
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///password_manager.db'
+app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder for storing files
+app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi'}  # Allowed file types
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -19,7 +22,6 @@ if not os.path.exists('encryption.key'):
 # Load encryption key
 with open('encryption.key', 'rb') as key_file:
     cipher = Fernet(key_file.read())
-
 
 # User Model
 class User(db.Model):
@@ -35,16 +37,53 @@ class Password(db.Model):
     username = db.Column(db.String(150), nullable=False)
     password = db.Column(db.Text, nullable=False)
 
+# File Model (Updated to match the actual name)
+class UploadedFile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    filename = db.Column(db.String(200), nullable=False)
+    filepath = db.Column(db.String(500), nullable=False)
+
 # Initialize database
 with app.app_context():
     db.create_all()
 
+# Ensure upload folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# Function to check allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+# File Upload Route
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        file = request.files['file']
+        
+        if file and allowed_file(file.filename):
+            # Securely save the file using a unique filename
+            filename = file.filename
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            # Save file info in the database
+            new_file = UploadedFile(user_id=session['user_id'], filename=filename, filepath=filepath)
+            db.session.add(new_file)
+            db.session.commit()
+
+            return redirect(url_for('dashboard'))
+
+    return render_template('upload.html')
 
 # Home Route
 @app.route('/')
 def home():
     return redirect(url_for('login'))
-
 
 # User Registration
 @app.route('/register', methods=['GET', 'POST'])
@@ -70,7 +109,6 @@ def register():
 
     return render_template('register.html')
 
-
 # User Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -87,7 +125,6 @@ def login():
         return "Invalid credentials. Try again."
 
     return render_template('login.html')
-
 
 # Dashboard (View & Add Passwords)
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -120,22 +157,43 @@ def dashboard():
         for p in passwords
     ]
 
-    return render_template('dashboard.html', passwords=decrypted_passwords)
+    # Retrieve uploaded files for the user
+    files = UploadedFile.query.filter_by(user_id=session['user_id']).all()
 
+    return render_template('dashboard.html', passwords=decrypted_passwords, files=files)
+
+# Password Generation (API endpoint)
+@app.route('/generate-password', methods=['GET'])
+def generate():
+    password_length = request.args.get("length", default=12, type=int)
+    password = generate_password(password_length)
+    return jsonify(password=password)
 
 # Delete a Password
-@app.route('/delete/<int:password_id>', methods=['POST'])
+@app.route('/delete_password/<int:password_id>', methods=['POST'])
 def delete_password(password_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     password = Password.query.get(password_id)
-    if password and password.user_id == session['user_id']:
+    if password:
         db.session.delete(password)
         db.session.commit()
-
     return redirect(url_for('dashboard'))
 
+# Delete a File (Updated Route)
+@app.route('/delete_file/<int:file_id>', methods=['POST'])
+def delete_file(file_id):
+    file = UploadedFile.query.get(file_id)  # Corrected reference to the model
+    if file:
+        db.session.delete(file)
+        db.session.commit()
+    return redirect(url_for('dashboard'))
+
+# Download File
+@app.route('/download/<int:file_id>')
+def download_file(file_id):
+    file = UploadedFile.query.get(file_id)
+    if file and file.user_id == session['user_id']:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], file.filename, as_attachment=True)
+    return redirect(url_for('dashboard'))
 
 # Logout
 @app.route('/logout')
@@ -143,7 +201,7 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('login'))
 
-
 if __name__ == '__main__':
+    # Make the app accessible on the local network (accessible via Wi-Fi)
     app.run(host='0.0.0.0', port=5000, debug=True)
 
