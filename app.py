@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash  # Updated import
 from cryptography.fernet import Fernet
 import os
 from utils import generate_password
@@ -11,7 +11,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///password_manager.db'
 app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder for storing files
 app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi'}  # Allowed file types
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 
 # Ensure encryption key exists or generate a new one
 if not os.path.exists('encryption.key'):
@@ -97,8 +96,8 @@ def register():
         if existing_user:
             return "Username already exists. Try a different one."
 
-        # Hash the password
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        # Hash the password using werkzeug.security
+        hashed_password = generate_password_hash(password)
 
         # Add user to the database
         new_user = User(username=username, password=hashed_password)
@@ -118,7 +117,7 @@ def login():
 
         # Check if user exists
         user = User.query.filter_by(username=username).first()
-        if user and bcrypt.check_password_hash(user.password, password):
+        if user and check_password_hash(user.password, password):  # Updated to use werkzeug
             session['user_id'] = user.id
             return redirect(url_for('dashboard'))
 
