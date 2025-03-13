@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard - Secure Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-gray-300 min-h-screen">
+    <header class="bg-gray-800 p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-3xl font-semibold text-blue-400">Secure Vault</h1>
+        <a href="/logout" class="text-red-400 hover:underline">Logout</a>
+    </header>
+
+    <main class="p-8 max-w-4xl mx-auto">
+        <h2 class="text-2xl mb-6">Save a New Password</h2>
+
+        <!-- Password Form -->
+        <form method="POST" action="/dashboard" class="space-y-4 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div>
+                <label class="block mb-1">Website</label>
+                <input type="text" name="website" required class="w-full p-2 rounded bg-gray-700 text-white">
+            </div>
+            <div>
+                <label class="block mb-1">Username</label>
+                <input type="text" name="username" required class="w-full p-2 rounded bg-gray-700 text-white">
+            </div>
+            <div>
+                <label class="block mb-1">Password</label>
+                <input type="password" name="password" required class="w-full p-2 rounded bg-gray-700 text-white">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 p-2 rounded text-white font-semibold">Save Password</button>
+        </form>
+
+        <!-- Stored Passwords -->
+        <h2 class="text-2xl mt-8 mb-4">Your Saved Passwords</h2>
+        <div class="space-y-4">
+            {% for password in passwords %}
+                <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex justify-between items-center">
+                    <div>
+                        <p><strong class="text-blue-400">{{ password.website }}</strong></p>
+                        <p>Username: {{ password.username }}</p>
+                        <p>Password: {{ password.password }}</p>
+                    </div>
+                    <form method="POST" action="/delete/{{ password.id }}">
+                        <button type="submit" class="bg-red-600 hover:bg-red-500 p-2 rounded text-white">Delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+
+</html>
+
+
