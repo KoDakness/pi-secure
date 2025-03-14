@@ -19,7 +19,7 @@ Installation
 Follow these steps to install Pi-Secure on your Raspberry Pi OS:
 
 1. Prepare Your Raspberry Pi
-Make sure your Raspberry Pi is running Raspberry Pi OS (any version compatible with Bookworm and based on Debian). For best results, use SSH to access your Raspberry Pi, as it might be tricky to set up directly on the Pi due to its slower 32-bit OS.
+Make sure your Raspberry Pi is running Raspberry Pi OS (any version compatible with Bookworm and based on Debian, Mine was 32 bit pi OS in testing). For best results, use SSH to access your Raspberry Pi, as it might be tricky to set up directly on the Pi due to its slower 32-bit OS.
 
 2. Clone the Repository
 First, clone the Pi-Secure repository to your Raspberry Pi. You can use SSH to clone the repo directly to your Pi.
