@@ -202,5 +202,5 @@ def logout():
 
 if __name__ == '__main__':
     # Make the app accessible on the local network (accessible via Wi-Fi)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
 
