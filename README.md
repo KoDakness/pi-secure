@@ -1,5 +1,9 @@
 Pi-Secure - Password Manager & File Upload App
+
+
 v 1.0.0
+
+
 Pi-Secure is a simple yet powerful password manager and file storage App designed for Raspberry Pi OS. With Pi-Secure, you can store and manage your passwords securely, generate strong passwords, and upload important files to keep them off your PC. Think of it as your own mini cloud for safe file storage and password management.
 
 This project is designed to run on Raspberry Pi OS, but it should work on other Debian-based OSes such as Bookworm for Raspberry Pi 4, Pi 5, and other compatible devices.
