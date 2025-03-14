@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Vault</title>
+    <title>Pi-Secure</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -12,14 +12,19 @@
     <header class="bg-gray-800 p-4 shadow-md flex justify-between items-center">
         <h1 class="text-3xl font-semibold text-blue-400">Pi-Secure</h1>
         <h2 class="text-1xl font-semibold text-blue-400">A project by KoDarkness</h2>
-        <a href="/logout" class="text-red-400 hover:underline">Logout</a>
+        <div class="flex items-center space-x-4">
+            <!-- Logout Button -->
+            <a href="/logout" class="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded-lg font-semibold transition duration-300">Logout</a>
+            <!-- Upload Button -->
+            <a href="/upload" class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold transition duration-300">Upload</a>
+        </div>
     </header>
 
     <main class="p-8 max-w-4xl mx-auto mt-8">
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold mb-6 text-center">Password Manager</h2>
 
-            <!-- Add New Password -->
+            <!-- Add New Password Form -->
             <form method="POST" action="/dashboard" class="space-y-4">
                 <div>
                     <label for="website" class="block mb-2 text-lg font-medium text-gray-200">Website</label>
@@ -38,41 +43,52 @@
             </form>
         </div>
 
-        <!-- View Saved Passwords -->
+        <!-- Tabs for Passwords and Files -->
         <div class="mt-8">
-            <h3 class="text-xl font-semibold text-gray-300">Saved Passwords</h3>
-            <ul class="space-y-4">
-                {% for password in passwords %}
+            <div class="flex space-x-4 mb-6">
+                <button id="passwords-tab" class="py-2 px-4 bg-gray-700 rounded-lg text-white hover:bg-gray-600 transition">Passwords</button>
+                <button id="files-tab" class="py-2 px-4 bg-gray-700 rounded-lg text-white hover:bg-gray-600 transition">Files</button>
+            </div>
+
+            <!-- Passwords Section -->
+            <div id="passwords-section" class="block">
+                <h3 class="text-xl font-bold text-gray-300 mb-4">Saved Passwords</h3>
+                <ul class="space-y-4">
+                    {% for password in passwords %}
                     <li class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
                         <div>
-                            <h4 class="font-semibold text-gray-200">{{ password.website }}</h4>
-                            <p class="text-gray-300">Username: {{ password.username }}</p>
-                            <p class="text-gray-400">Password: {{ password.password }}</p>
+                            <h4 class="text-xl font-bold text-gray-200">{{ password.website }}</h4>
+                            <p class="text-lg text-gray-300">Username: {{ password.username }}</p>
+                            <p class="text-lg text-gray-300">Password: {{ password.password }}</p>
                         </div>
                         <form action="/delete_password/{{ password.id }}" method="POST">
-                            <button type="submit" class="ml-4 text-red-500 hover:text-red-400">Delete</button>
+                            <button type="submit" class="ml-4 bg-red-600 hover:bg-red-500 py-2 px-4 rounded-lg text-white font-semibold transition duration-300">Delete</button>
                         </form>
                     </li>
-                {% endfor %}
-            </ul>
-        </div>
+                    {% endfor %}
+                </ul>
+            </div>
 
-        <!-- View Uploaded Files -->
-        <div class="mt-8">
-            <h3 class="text-xl font-semibold text-gray-300">Uploaded Files</h3>
-            <ul class="space-y-4">
-                {% for file in files %}
+            <!-- Files Section -->
+            <div id="files-section" class="hidden">
+                <h3 class="text-xl font-bold text-gray-300 mb-4">Uploaded Files</h3>
+                <ul class="space-y-4">
+                    {% for file in files %}
                     <li class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
-                        <div>
-                            <h4 class="font-semibold text-gray-200">{{ file.filename }}</h4>
-                            <a href="{{ url_for('download_file', file_id=file.id) }}" class="text-blue-400 hover:underline">Download</a>
+                        <div class="flex items-center">
+                            <h4 class="text-xl font-bold text-gray-200">{{ file.filename }}</h4>
+                            {% if file.filename.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+                            <img src="{{ url_for('download_file', file_id=file.id) }}" alt="File Image" class="w-12 h-12 ml-4 rounded-lg">
+                            {% endif %}
                         </div>
+                        <a href="{{ url_for('download_file', file_id=file.id) }}" class="text-blue-400 hover:underline text-lg font-semibold">Download</a>
                         <form action="/delete_file/{{ file.id }}" method="POST">
-                            <button type="submit" class="ml-4 text-red-500 hover:text-red-400">Delete</button>
+                            <button type="submit" class="ml-4 bg-red-600 hover:bg-red-500 py-2 px-4 rounded-lg text-white font-semibold transition duration-300">Delete</button>
                         </form>
                     </li>
-                {% endfor %}
-            </ul>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </main>
 
@@ -86,6 +102,20 @@
                 password += charset[randomIndex];
             }
             document.getElementById('password').value = password;
+        });
+
+        document.getElementById('passwords-tab').addEventListener('click', function() {
+            document.getElementById('passwords-section').classList.remove('hidden');
+            document.getElementById('files-section').classList.add('hidden');
+            this.classList.add('bg-gray-600');
+            document.getElementById('files-tab').classList.remove('bg-gray-600');
+        });
+
+        document.getElementById('files-tab').addEventListener('click', function() {
+            document.getElementById('files-section').classList.remove('hidden');
+            document.getElementById('passwords-section').classList.add('hidden');
+            this.classList.add('bg-gray-600');
+            document.getElementById('passwords-tab').classList.remove('bg-gray-600');
         });
     </script>
 </body>
