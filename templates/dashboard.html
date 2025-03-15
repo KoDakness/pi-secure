@@ -6,13 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pi-Secure Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="icon" type="image/x-icon" href="static/favicon.ico">
 </head>
 
 <body class="bg-gray-100 text-gray-800 min-h-screen flex">
     <!-- Sidebar -->
     <aside id="sidebar" class="bg-white w-64 p-6 flex flex-col space-y-8 shadow-lg transition-all duration-300">
         <div class="flex items-center mb-6">
-            <img src="/static/pi-secure.png" alt="First Logo" class="h-16 w-16 mr-1" />
+            <img src="/static/pi-secure.png" alt="Pi-Secure Logo" style="width: 60px; height: 60px;">
             <h2 class="text-3xl font-bold text-red-500">Pi-Secure</h2>
           </div>
           
@@ -52,39 +55,34 @@
                     <div>
                         <label for="username" class="block mb-2 text-lg">Username</label>
                         <div class="flex items-center space-x-2">
-                            <input type="text" id="username" name="username" required class="flex-1 p-3 rounded-lg bg-gray-200 border-gray-400 focus:border-red-400">
-                            <button type="button" onclick="copyToClipboard('username')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg text-white">📋</button>
+                          <input type="text" id="username" name="username" required class="flex-1 p-3 rounded-lg bg-gray-200 border-gray-400 focus:border-red-400">
+                            <button class="copy-button" onclick="copyToClipboard('username')"><i class="fas fa-clipboard"></i></button>
                         </div>
-                    </div>
-
-                    <div>
+                      </div>
+                      
+                      <div>
                         <label for="password" class="block mb-2 text-lg">Password</label>
                         <div class="flex items-center space-x-2">
-                            <input type="text" id="password" name="password" placeholder="Enter or Generate" class="flex-1 p-3 rounded-lg bg-gray-200 border-gray-400 focus:border-red-400">
-                            <button type="button" id="generate-password" class="bg-red-500 hover:bg-red-400 py-2 px-4 rounded-lg text-white">Generate</button>
-                            <button type="button" onclick="copyToClipboard('password')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg text-white">📋</button>
+                          <input type="text" id="password" name="password" placeholder="Enter or Generate" class="flex-1 p-3 rounded-lg bg-gray-200 border-gray-400 focus:border-red-400">
+                          <button type="button" id="generate-password" class="bg-red-500 hover:bg-red-400 py-2 px-4 rounded-lg text-white">Generate</button>
+                          <button class="copy-button" onclick="copyToClipboard('password')"><i class="fas fa-clipboard"></i></button>
                         </div>
-                    </div>
+                      </div>
 
                     <button type="submit" class="w-full py-3 bg-red-500 hover:bg-red-400 rounded-lg text-white">Save Password</button>
                 </form>
             </div>
 
-            <h3 class="text-3xl font-semibold mb-4">Saved Passwords</h3>
-            <ul class="space-y-4">
+            <ul class="password-list">
                 {% for password in passwords %}
-                <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-center">
-                    <div>
-                        <h4 class="text-xl">{{ password.website }}</h4>
-                        <p>Username: {{ password.username }} <button onclick="copyText('{{ password.username }}')" class="bg-gray-200 hover:bg-gray-300 p-1 rounded-lg text-white">📋</button></p>
-                        <p>Password: {{ password.password }} <button onclick="copyText('{{ password.password }}')" class="bg-gray-200 hover:bg-gray-300 p-1 rounded-lg text-white">📋</button></p>
-                    </div>
-                    <form action="/delete_password/{{ password.id }}" method="POST">
-                        <button type="submit" class="bg-red-500 hover:bg-red-400 py-2 px-4 rounded-lg text-white">Delete</button>
-                    </form>
+                <li class="password-list-item">
+                  <h4 class="password-list-item-title">{{ password.website }}</h4>
+                  <p class="password-list-item-username">Username: {{ password.username }} <button class="copy-button" onclick="copyText('{{ password.username }}')"><i class="fas fa-clipboard"></i></button></p>
+                  <p class="password-list-item-password">Password: {{ password.password }} <button class="copy-button" onclick="copyText('{{ password.password }}')"><i class="fas fa-clipboard"></i></button></p>
+                  <button class="password-list-item-delete" onclick="deletePassword('{{ password.id }}')">Delete</button>
                 </li>
                 {% endfor %}
-            </ul>
+              </ul>
         </section>
       <!-- Files Section -->
             <div id="files-section" class="hidden">
@@ -145,5 +143,3 @@
 </body>
 
 </html>
-
-
