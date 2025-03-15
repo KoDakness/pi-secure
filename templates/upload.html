@@ -8,34 +8,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-900 text-gray-300 min-h-screen">
-    <header class="bg-gray-800 p-4 shadow-md flex justify-between items-center">
-        <h1 class="text-3xl font-semibold text-blue-400">Secure Vault</h1>
-        <a href="/logout" class="text-red-400 hover:underline">Logout</a>
+<body class="bg-white text-red-800 min-h-screen">
+    <header class="bg-red-600 p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-3xl font-semibold text-white">Uploads</h1>
+        <a href="/logout" class="text-white hover:underline">Logout</a>
     </header>
 
     <main class="p-8 max-w-4xl mx-auto mt-8">
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <div class="bg-white-500 p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold mb-6 text-center">Upload a File</h2>
 
             <!-- File Upload Form -->
             <form method="POST" action="/upload" enctype="multipart/form-data" class="space-y-4">
                 <div>
-                    <label for="file" class="block mb-2 text-lg font-medium text-gray-200">Select a file to upload</label>
-                    <input type="file" name="file" id="file" required class="w-full p-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500">
+                    <label for="file" class="block mb-2 text-lg font-medium">Select a file to upload</label>
+                    <input type="file" name="file" id="file" required class="w-full p-3 rounded-lg bg-white text-red-600 border-2 border-red-400 focus:border-red-600">
                 </div>
-                
-                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Upload File</button>
+
+                <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-500 rounded-lg text-white font-semibold focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">Upload File</button>
             </form>
         </div>
 
         <!-- Back to Dashboard Link -->
         <div class="mt-8 text-center">
-            <a href="{{ url_for('dashboard') }}" class="text-blue-400 hover:underline">Back to Dashboard</a>
+            <a href="{{ url_for('dashboard') }}" class="text-red-600 hover:underline">Back to Dashboard</a>
         </div>
     </main>
 </body>
 
 </html>
-
 
