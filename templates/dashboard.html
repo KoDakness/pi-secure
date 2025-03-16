@@ -79,11 +79,15 @@
                   <h4 class="password-list-item-title">{{ password.website }}</h4>
                   <p class="password-list-item-username">Username: {{ password.username }} <button class="copy-button" onclick="copyText('{{ password.username }}')"><i class="fas fa-clipboard"></i></button></p>
                   <p class="password-list-item-password">Password: {{ password.password }} <button class="copy-button" onclick="copyText('{{ password.password }}')"><i class="fas fa-clipboard"></i></button></p>
-                  <button class="password-list-item-delete" onclick="deletePassword('{{ password.id }}')">Delete</button>
+                  <form action="/delete_password/{{ password.id }}" method="POST">
+                    <button type="submit" class="ml-2 bg-red-600 hover:bg-red-500 py-1 px-4 rounded-lg text-white font-semibold transition duration-300">Delete</button>
+                </form>
+                
                 </li>
                 {% endfor %}
-              </ul>
-        </section>
+            </ul>
+
+            </section>
       <!-- Files Section -->
             <div id="files-section" class="hidden">
                 <h3 class="text-xl font-bold text-red-700 mb-4">Uploaded Files</h3>
@@ -98,7 +102,7 @@
                         </div>
                         <a href="{{ url_for('download_file', file_id=file.id) }}" class="red-400 hover:underline text-lg font-semibold">Download</a>
                         <form action="/delete_file/{{ file.id }}" method="POST">
-                            <button type="submit" class="ml-4 bg-red-600 hover:bg-red-500 py-2 px-4 rounded-lg text-white font-semibold transition duration-300">Delete</button>
+                            <button type="submit" class="ml-4 bg-red-00 hover:bg-red-500 py-2 px-4 rounded-lg text-white font-semibold transition duration-300">Delete</button>
                         </form>
                     </li>
                     {% endfor %}
@@ -139,6 +143,7 @@
             document.getElementById('sidebar').classList.toggle('w-64');
             document.getElementById('sidebar').classList.toggle('w-20');
         });
+        let deleteItemId = null;
     </script>
 </body>
 
