@@ -1,0 +1,150 @@
+
+.password-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .password-list-item {
+    padding: 16px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .password-list-item-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .password-list-item-username,
+  .password-list-item-password {
+    font-size: 20px;
+    color: #666;
+  }
+  
+  .copy-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .copy-button i {
+    font-size: 16px;
+    color: #a32919;
+  }
+  .large-text {
+    font-size: 20px;
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .bg-white-500 {
+    background-color: #f7f7f7;
+  }
+  
+  .p-6 {
+    padding: 24px;
+  }
+  
+  .rounded-lg {
+    border-radius: 10px;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .text-2xl {
+    font-size: 24px;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  .mb-6 {
+    margin-bottom: 24px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .space-y-4 {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .p-3 {
+    padding: 12px;
+  }
+  
+  .rounded-lg {
+    border-radius: 10px;
+  }
+  
+  .bg-gray-200 {
+    background-color: #e5e5e5;
+  }
+  
+  .border-gray-400 {
+    border-color: #d3d3d3;
+  }
+  
+  .focus\:border-red-400 {
+    border-color: #dc3545;
+  }
+  
+  .py-3 {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  
+  .bg-red-600 {
+    background-color: #dc3545;
+  }
+  
+  .hover\:bg-red-500 {
+    background-color: #e74c3c;
+  }
+  
+  .text-white {
+    color: #ffffff;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  .focus\:outline-none {
+    outline: none;
+  }
+  
+  .focus\:ring-2 {
+    box-shadow: 0 0 0 2px #dc3545;
+  }
+  
+  .focus\:ring-opacity-50 {
+    opacity: 0.5;
+  }
+  
+  .mt-8 {
+    margin-top: 32px;
+  }
+  
+  .text-red-600 {
+    color: #dc3545;
+  }
+  
+  .hover\:underline {
+    text-decoration: underline;
+  }
