@@ -50,6 +50,8 @@ python app.py
 
 ### The default port is 5000, but you can configure it to any other port if needed.
 
+### At this point you can either start your app through ssh like we did earlier or u can setup a script to auto run on pi boot.
+
 ### Features in Detail
 
 ##  Password Manager: You can securely store passwords for various websites and accounts. Easily add, view, and delete passwords. Password Generator: Generate strong and random passwords at the click of a button.
